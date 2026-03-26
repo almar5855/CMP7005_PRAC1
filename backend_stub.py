@@ -1,5 +1,6 @@
 
 import pandas as pd
+import io
 from enum import Enum, auto
 from http import HTTPStatus
 
@@ -25,17 +26,20 @@ def get_data(regions=None, date_from=None, date_to=None):
 
     return result
 
-def get_region_names():
+def get_region_names(regions=None, date_from=None, date_to=None):
     return original['station'].unique()
 
-def get_component_names():
+def get_component_names(regions=None, date_from=None, date_to=None):
     return original.columns
 
 def get_dataset_shape(regions=None, date_from=None, date_to=None):
     return get_data(regions, date_from, date_to).shape
 
 def get_dataset_info(regions=None, date_from=None, date_to=None):
-    return get_data(regions, date_from, date_to).info()
+    df = get_data(regions, date_from, date_to)
+    result = io.StringIO()
+    df.info(buf=result)
+    return result.getvalue()
 
 def get_dataset_description(regions=None, date_from=None, date_to=None):
     return get_data(regions, date_from, date_to).describe()
