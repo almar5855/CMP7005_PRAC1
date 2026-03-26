@@ -1,5 +1,7 @@
 
 import pandas as pd
+from enum import Enum, auto
+from http import HTTPStatus
 
 original = pd.read_csv('original_data.csv')
 processed = pd.read_csv('processed.csv')
@@ -37,3 +39,45 @@ def get_dataset_info(regions=None, date_from=None, date_to=None):
 
 def get_dataset_description(regions=None, date_from=None, date_to=None):
     return get_data(regions, date_from, date_to).describe()
+
+def get_dataset_nans(regions=None, date_from=None, date_to=None):
+
+    data = get_data(regions, date_from, date_to)
+    nans = data.isna().sum()
+    row_total = len(data)
+    nan_tab = pd.concat([nans, (nans/row_total)*100], axis=1)
+    nan_tab.rename(columns={0: 'Missing Values', 1: '% of Total Values'}, inplace=True)
+    nan_tab.sort_values('% of Total Values', ascending=False, inplace=True)
+    return nan_tab.style.background_gradient(cmap='Greens')
+
+class Endpoint(Enum):
+    DATA = auto()
+    REGIONS = auto()
+    COLUMNS = auto()
+    SHAPE = auto()
+    INFO = auto()
+    DESC = auto()
+    NANS = auto()
+
+ENDPOINTS = {
+    Endpoint.DATA : get_data,
+    Endpoint.REGIONS : get_region_names,
+    Endpoint.COLUMNS : get_component_names,
+    Endpoint.SHAPE : get_dataset_shape,
+    Endpoint.INFO : get_dataset_info,
+    Endpoint.DESC : get_dataset_description,
+    Endpoint.NANS : get_dataset_nans,
+}
+
+class DatasetAPI:
+
+    @staticmethod
+    def request(endpoint, regions=None, date_from=None, date_to=None):
+
+        if not isinstance(endpoint, Endpoint):
+            return {'status': HTTPStatus.BAD_REQUEST, 'data': 'Endpoint does not exist'}
+
+        if endpoint not in ENDPOINTS:
+            return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': ''}
+
+        return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to)}
