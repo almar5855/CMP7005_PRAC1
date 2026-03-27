@@ -4,7 +4,8 @@ from streamlit_option_menu import option_menu
 
 OPTIONS = [
 "Home",
-"Dataset Understanding",
+"Dataset Information",
+"Initial Observations"
 "Data Preprocessing",
 "Statistical Analysis",
 "Modeling",
@@ -12,7 +13,8 @@ OPTIONS = [
 
 ROUTES = {
 "Home": "app.py",
-"Dataset Understanding": "pages/data_understanding.py",
+"Dataset Information": "pages/dataset_information.py",
+"Initial Observations": "pages/initial_observations.py",
 "Data Preprocessing": "pages/data_preprocessing.py",
 "Statistical Analysis": "pages/statistical_analysis.py",
 "Modeling": "pages/model.py",
@@ -39,8 +41,8 @@ def render_navbar() -> str:
     with st.sidebar:
         selected = option_menu(
             menu_title='Navigation',
-            options=['Home', 'Dataset Understanding', 'Data Preprocessing', 'Statistical Analysis', 'Modeling'],
-            icons=['house', 'list-task', 'gear', 'graph-up', 'gear'],
+            options=['Home', 'Dataset Information', 'Initial Observations', 'Data Preprocessing', 'Statistical Analysis', 'Modeling'],
+            icons=['house', 'list-task', 'graph-up', 'gear', 'graph-up', 'gear'],
             menu_icon="cast",
             #default_index=0,
             manual_select=selected

@@ -65,11 +65,21 @@ def get_histogram(regions=None, date_from=None, date_to=None, components='PM2.5'
 
     df = get_data(regions, date_from, date_to, components)
 
-    #fig, ax = plt.subplots(figsize=(10, 15))
-    fig = plt.figure()
+    fig = plt.figure(figsize=(10,10))
     plt.hist(df[components], bins=50)
-    #ax[i].plot(station_data[stat].mean(), 'bx')
-    #ax.set(title=f'{stat}', ylabel='Concentration')
+    plt.xlabel("")
+    plt.xticks([])
+
+    return fig
+
+def get_boxplot(regions=None, date_from=None, date_to=None, components='PM2.5'):
+
+    df = get_data(regions, date_from, date_to, components)
+
+    fig = plt.figure(figsize=(10,10))
+    ax = df[[components]].boxplot()
+    ax.set_xlabel("")
+    ax.set_xticklabels([])
 
     return fig
 
@@ -82,6 +92,7 @@ class Endpoint(Enum):
     DESC = auto()
     NANS = auto()
     HIST = auto()
+    BOX = auto()
 
 ENDPOINTS = {
     Endpoint.DATA : get_data,
@@ -92,6 +103,7 @@ ENDPOINTS = {
     Endpoint.DESC : get_dataset_description,
     Endpoint.NANS : get_dataset_nans,
     Endpoint.HIST : get_histogram,
+    Endpoint.BOX : get_boxplot,
 }
 
 class DatasetAPI:
@@ -106,7 +118,7 @@ class DatasetAPI:
             return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': ''}
 
         # TODO: Temporary fudge
-        if endpoint == Endpoint.HIST:
+        if endpoint in [Endpoint.HIST, Endpoint.BOX]:
             return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to, components)}
 
         return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to)}
