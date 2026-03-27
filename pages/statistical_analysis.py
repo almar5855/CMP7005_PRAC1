@@ -27,6 +27,6 @@ with col1:
 with col2:
     pollution_component = fc.component_filter(False)
 
-data = request_data(ep.DATA, regions, date_from, date_to, pollution_component)
+data = request_data(ep.HIST, regions, date_from, date_to, pollution_component)
 
-st.bar_chart(data[pollution_component])
+st.pyplot(data)

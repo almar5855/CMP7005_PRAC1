@@ -14,6 +14,8 @@ def get_data(regions=None, date_from=None, date_to=None, components=None):
 
     result = []
     tmp = original.groupby('station')
+    #tmp = processed.groupby('station')
+
     for region in regions:
         result.append(tmp.get_group(region))
     result = pd.concat(result)
@@ -57,6 +59,20 @@ def get_dataset_nans(regions=None, date_from=None, date_to=None):
     nan_tab.sort_values('% of Total Values', ascending=False, inplace=True)
     return nan_tab.style.background_gradient(cmap='Greens')
 
+import matplotlib.pyplot as plt
+
+def get_histogram(regions=None, date_from=None, date_to=None, components='PM2.5'):
+
+    df = get_data(regions, date_from, date_to, components)
+
+    #fig, ax = plt.subplots(figsize=(10, 15))
+    fig = plt.figure()
+    plt.hist(df[components], bins=50)
+    #ax[i].plot(station_data[stat].mean(), 'bx')
+    #ax.set(title=f'{stat}', ylabel='Concentration')
+
+    return fig
+
 class Endpoint(Enum):
     DATA = auto()
     REGIONS = auto()
@@ -65,6 +81,7 @@ class Endpoint(Enum):
     INFO = auto()
     DESC = auto()
     NANS = auto()
+    HIST = auto()
 
 ENDPOINTS = {
     Endpoint.DATA : get_data,
@@ -74,6 +91,7 @@ ENDPOINTS = {
     Endpoint.INFO : get_dataset_info,
     Endpoint.DESC : get_dataset_description,
     Endpoint.NANS : get_dataset_nans,
+    Endpoint.HIST : get_histogram,
 }
 
 class DatasetAPI:
@@ -88,7 +106,7 @@ class DatasetAPI:
             return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': ''}
 
         # TODO: Temporary fudge
-        if endpoint == Endpoint.DATA:
+        if endpoint == Endpoint.HIST:
             return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to, components)}
 
         return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to)}
