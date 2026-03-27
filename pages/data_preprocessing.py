@@ -6,5 +6,4 @@ from components import filter as fc
 
 selected = nav.render_navbar()
 st.title(selected)
-
-regions, date_from, date_to = fc.render_filter()
+regions, date_from, date_to = fc.dataset_filter()

@@ -3,15 +3,16 @@ import datetime
 import streamlit as st
 import backend_stub as bs
 
-def render_filter():
+# TODO: This file needs to use the Faux-RESTful API before submission
 
-    with st.expander('Filter'):
+def dataset_filter():
+
+    with st.expander('Dataset Filter'):
         all_regions = bs.get_region_names()
         regions = st.multiselect('Region', all_regions)
-        select_all = st.checkbox('Select all')
+        select_all = st.checkbox('Select all', value=[len(regions)==0])
         if select_all:
             regions = all_regions
-        #st.write(regions)
 
         min_date = datetime.date(2013, 3, 1)
         max_date = datetime.date(2017, 2, 28)
@@ -27,7 +28,18 @@ def render_filter():
                         max_value=max_date,
                         format="YYYY.MM.DD",
         )
-        # st.write(date_from)
-        # st.write(date_to)
 
     return regions, date_from, date_to
+
+def component_filter(multivariate=False):
+
+    #data = request_data(ep.COLUMNS, regions, date_from, date_to)
+    components = bs.get_component_names()
+    components = components.drop(['datetime', 'No', 'station'])
+
+    with st.expander('Component Filter'):
+
+        if multivariate:
+            return st.multiselect('Components', components)
+
+        return st.selectbox('Component', components)

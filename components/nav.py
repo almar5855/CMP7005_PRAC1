@@ -30,7 +30,7 @@ def switch_page(selected: str) -> None:
         st.switch_page(ROUTES[selected])
 
 
-def render_navbar():
+def render_navbar() -> str:
 
     selected = 0
     if 'current_page' in st.session_state:

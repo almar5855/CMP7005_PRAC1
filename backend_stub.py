@@ -7,9 +7,9 @@ from http import HTTPStatus
 original = pd.read_csv('original_data.csv')
 processed = pd.read_csv('processed.csv')
 
-def get_data(regions=None, date_from=None, date_to=None):
+def get_data(regions=None, date_from=None, date_to=None, components=None):
 
-    if (regions is None or len(regions)==0):
+    if (regions is None or len(regions)==0) and components is None:
         return original
 
     result = []
@@ -23,6 +23,9 @@ def get_data(regions=None, date_from=None, date_to=None):
 
     if date_to is not None:
         result = result[pd.to_datetime(result['datetime']) <= pd.to_datetime(date_to)]
+
+    if components is not None:
+        result = result[['No', 'station', components]]
 
     return result
 
@@ -76,12 +79,16 @@ ENDPOINTS = {
 class DatasetAPI:
 
     @staticmethod
-    def request(endpoint, regions=None, date_from=None, date_to=None):
+    def request(endpoint, regions=None, date_from=None, date_to=None, components=None):
 
         if not isinstance(endpoint, Endpoint):
             return {'status': HTTPStatus.BAD_REQUEST, 'data': 'Endpoint does not exist'}
 
         if endpoint not in ENDPOINTS:
             return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': ''}
+
+        # TODO: Temporary fudge
+        if endpoint == Endpoint.DATA:
+            return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to, components)}
 
         return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to)}
