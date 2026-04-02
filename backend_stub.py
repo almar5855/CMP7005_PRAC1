@@ -92,7 +92,7 @@ def get_na_heatmap(regions=None, date_from=None, date_to=None, components='PM2.5
 
     fig = plt.figure()
     sns.heatmap(
-        df.isna().T,
+        df[[components]].isna().T,
     )
     return fig
 

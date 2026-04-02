@@ -27,7 +27,11 @@ with col1:
 with col2:
     pollution_component = fc.component_filter(False)
 
+    # TODO: A lack of unit testing coming home to roost now
+    #pollution_component = pollution_component.drop(['No', 'station'])
+
 #regions, date_from, date_to = fc.dataset_filter()
 
+st.write(pollution_component)
 data = request_data(ep.HEAT_NA, regions, date_from, date_to, pollution_component)
 st.pyplot(data)
