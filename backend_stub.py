@@ -23,11 +23,11 @@ def get_data(regions=None, date_from=None, date_to=None, components=None):
         result.append(tmp.get_group(region))
     result = pd.concat(result)
 
-    #if date_from is not None:
-    #    result = result[pd.to_datetime(result['datetime']) >= pd.to_datetime(date_from)]
+    if date_from is not None:
+        result = result[result.index >= pd.to_datetime(date_from)]
 
-    #if date_to is not None:
-    #    result = result[pd.to_datetime(result['datetime']) <= pd.to_datetime(date_to)]
+    if date_to is not None:
+        result = result[result.index <= pd.to_datetime(date_to)]
 
     if components is not None:
         result = result[['No', 'station', components]]
