@@ -103,7 +103,7 @@ def get_scatterplot(regions=None, date_from=None, date_to=None, components='PM2.
     fig = plt.figure()
     plt.scatter(df.index, df[components])
     plot_interval = np.arange(len(df.index))
-    z = np.polyfit(plot_interval, df[components].notna, 1,)
+    z = np.polyfit(df[components], df[components], 1,)
     y_hat = np.poly1d(z)
     plt.plot(df.index, y_hat(plot_interval), "r--", lw=1)
 
