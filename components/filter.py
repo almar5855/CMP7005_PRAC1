@@ -35,7 +35,8 @@ def component_filter(multivariate=False):
 
     #data = request_data(ep.COLUMNS, regions, date_from, date_to)
     components = bs.get_component_names()
-    components = components.drop(['datetime', 'No', 'station'])
+    #components = components.drop(['datetime', 'No', 'station'])
+    components = components.drop(['No', 'station'])
 
     with st.expander('Component Filter'):
 

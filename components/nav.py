@@ -41,7 +41,8 @@ def render_navbar() -> str:
     with st.sidebar:
         selected = option_menu(
             menu_title='Navigation',
-            options=['Home', 'Dataset Information', 'Initial Observations', 'Data Preprocessing', 'Statistical Analysis', 'Modeling'],
+            #options=['Home', 'Dataset Information', 'Initial Observations', 'Data Preprocessing', 'Statistical Analysis', 'Modeling'],
+            options=OPTIONS,
             icons=['house', 'list-task', 'graph-up', 'gear', 'graph-up', 'gear'],
             menu_icon="cast",
             #default_index=0,

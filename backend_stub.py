@@ -1,11 +1,14 @@
 
 import pandas as pd
+import numpy as np
+import matplotlib.pylab as plt
+import seaborn as sns
 import io
 from enum import Enum, auto
 from http import HTTPStatus
 
-original = pd.read_csv('original_data.csv')
-processed = pd.read_csv('processed.csv')
+original = pd.read_csv('original_data.csv', index_col='datetime', parse_dates=['datetime'])
+#processed = pd.read_csv('processed.csv')
 
 def get_data(regions=None, date_from=None, date_to=None, components=None):
 
@@ -20,11 +23,11 @@ def get_data(regions=None, date_from=None, date_to=None, components=None):
         result.append(tmp.get_group(region))
     result = pd.concat(result)
 
-    if date_from is not None:
-        result = result[pd.to_datetime(result['datetime']) >= pd.to_datetime(date_from)]
+    #if date_from is not None:
+    #    result = result[pd.to_datetime(result['datetime']) >= pd.to_datetime(date_from)]
 
-    if date_to is not None:
-        result = result[pd.to_datetime(result['datetime']) <= pd.to_datetime(date_to)]
+    #if date_to is not None:
+    #    result = result[pd.to_datetime(result['datetime']) <= pd.to_datetime(date_to)]
 
     if components is not None:
         result = result[['No', 'station', components]]
@@ -65,7 +68,7 @@ def get_histogram(regions=None, date_from=None, date_to=None, components='PM2.5'
 
     df = get_data(regions, date_from, date_to, components)
 
-    fig = plt.figure(figsize=(10,10))
+    fig = plt.figure()
     plt.hist(df[components], bins=50)
     plt.xlabel("")
     plt.xticks([])
@@ -76,12 +79,36 @@ def get_boxplot(regions=None, date_from=None, date_to=None, components='PM2.5'):
 
     df = get_data(regions, date_from, date_to, components)
 
-    fig = plt.figure(figsize=(10,10))
+    fig = plt.figure()
     ax = df[[components]].boxplot()
     ax.set_xlabel("")
     ax.set_xticklabels([])
 
     return fig
+
+def get_na_heatmap(regions=None, date_from=None, date_to=None, components='PM2.5'):
+
+    df = get_data(regions, date_from, date_to, components)
+
+    fig = plt.figure()
+    sns.heatmap(
+        df.isna().T,
+    )
+    return fig
+
+def get_scatterplot(regions=None, date_from=None, date_to=None, components='PM2.5'):
+
+    df = get_data(regions, date_from, date_to, components)
+
+    fig = plt.figure()
+    plt.scatter(df.index, df[components])
+    plot_interval = np.arange(len(df.index))
+    z = np.polyfit(plot_interval, df[components].notna, 1,)
+    y_hat = np.poly1d(z)
+    plt.plot(df.index, y_hat(plot_interval), "r--", lw=1)
+
+    return fig
+
 
 class Endpoint(Enum):
     DATA = auto()
@@ -93,6 +120,8 @@ class Endpoint(Enum):
     NANS = auto()
     HIST = auto()
     BOX = auto()
+    HEAT_NA = auto()
+    SCAT = auto()
 
 ENDPOINTS = {
     Endpoint.DATA : get_data,
@@ -104,6 +133,8 @@ ENDPOINTS = {
     Endpoint.NANS : get_dataset_nans,
     Endpoint.HIST : get_histogram,
     Endpoint.BOX : get_boxplot,
+    Endpoint.HEAT_NA : get_na_heatmap,
+    Endpoint.SCAT : get_scatterplot,
 }
 
 class DatasetAPI:
@@ -118,7 +149,7 @@ class DatasetAPI:
             return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': ''}
 
         # TODO: Temporary fudge
-        if endpoint in [Endpoint.HIST, Endpoint.BOX]:
+        if endpoint in [Endpoint.HIST, Endpoint.BOX, Endpoint.HEAT_NA, Endpoint.SCAT]:
             return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to, components)}
 
         return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to)}
