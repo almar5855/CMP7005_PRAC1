@@ -3,21 +3,21 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 
 OPTIONS = [
-"Home",
-"Dataset Information",
-"Initial Observations"
-"Data Preprocessing",
-"Statistical Analysis",
-"Modeling",
+'Home',
+'Dataset Information',
+'Initial Observations',
+'Data Preprocessing',
+'Statistical Analysis',
+'Modeling',
 ]
 
 ROUTES = {
-"Home": "app.py",
-"Dataset Information": "pages/dataset_information.py",
-"Initial Observations": "pages/initial_observations.py",
-"Data Preprocessing": "pages/data_preprocessing.py",
-"Statistical Analysis": "pages/statistical_analysis.py",
-"Modeling": "pages/model.py",
+'Home': 'app.py',
+'Dataset Information': 'pages/dataset_information.py',
+'Initial Observations': 'pages/initial_observations.py',
+'Data Preprocessing': 'pages/data_preprocessing.py',
+'Statistical Analysis': 'pages/statistical_analysis.py',
+'Modeling': 'pages/model.py',
 }
 
 def switch_page(selected: str) -> None:
