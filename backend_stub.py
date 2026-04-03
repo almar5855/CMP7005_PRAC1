@@ -30,7 +30,10 @@ def get_data(regions=None, date_from=None, date_to=None, components=None):
         result = result[result.index <= pd.to_datetime(date_to)]
 
     if components is not None:
-        cols = ['No', 'station'] + components
+        if isinstance(components, str):
+            cols = ['No', 'station', components]
+        else:    
+            cols = ['No', 'station'] + components
         result = result[cols]
 
     return result
@@ -168,4 +171,4 @@ class DatasetAPI:
             return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to)}
         except TypeError as ex:
 
-            return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': f'{ex}'}
+            return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': {ex}}
