@@ -13,7 +13,10 @@ def request_data(endpoint, regions, date_from, date_to, component):
     if response['status'] == HTTPStatus.OK:
         return response['data']
 
-    raise Exception(f'An error occurred {response['status']}')  
+    with st.expander('Error'):
+        st.write(f'An error was returned from the backend: {response['data']}')  
+
+    return None
 
 st.set_page_config(layout='wide')
 
@@ -30,5 +33,6 @@ with col2:
     pollution_component = [pollution_component_x, pollution_component_y]
 
 data = request_data(ep.SCAT, regions, date_from, date_to, pollution_component)
-st.pyplot(data)
+if data is not None:
+    st.pyplot(data)
 
