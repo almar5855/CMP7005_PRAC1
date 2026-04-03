@@ -30,7 +30,8 @@ def get_data(regions=None, date_from=None, date_to=None, components=None):
         result = result[result.index <= pd.to_datetime(date_to)]
 
     if components is not None:
-        result = result[['No', 'station', components]]
+        cols = ['No', 'station'] + components
+        result = result[cols]
 
     return result
 
@@ -96,16 +97,27 @@ def get_na_heatmap(regions=None, date_from=None, date_to=None, components='PM2.5
     )
     return fig
 
-def get_scatterplot(regions=None, date_from=None, date_to=None, components='PM2.5'):
+def get_valid_data(regions=None, date_from=None, date_to=None, components=['PM2.5', 'PM10']):
 
     df = get_data(regions, date_from, date_to, components)
 
-    fig = plt.figure()
-    plt.scatter(df.index, df[components])
-    plot_interval = np.arange(len(df.index))
-    z = np.polyfit(df[components], df[components], 1,)
+    valid = df[components[0]].notna() & df[components[1]].notna()
+    x = df[components[0]][valid]
+    y = df[components[1]][valid]
+    interval = np.linspace(x.min(), x.max())
+
+    return x, y, interval 
+
+def get_scatterplot(regions=None, date_from=None, date_to=None, components=['PM2.5', 'PM10']):
+
+    x, y, interval = get_valid_data(regions, date_from, date_to, components)
+
+    fig = plt.figure()        
+    plt.scatter(x, y, s=0.25)
+
+    z = np.polyfit(x, y, deg=1)
     y_hat = np.poly1d(z)
-    plt.plot(df.index, y_hat(plot_interval), "r--", lw=1)
+    plt.plot(interval, y_hat(interval), "k--", lw=0.5)
 
     return fig
 
@@ -146,10 +158,14 @@ class DatasetAPI:
             return {'status': HTTPStatus.BAD_REQUEST, 'data': 'Endpoint does not exist'}
 
         if endpoint not in ENDPOINTS:
-            return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': ''}
+            return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': 'Route does not exist'}
 
-        # TODO: Temporary fudge
-        if endpoint in [Endpoint.HIST, Endpoint.BOX, Endpoint.HEAT_NA, Endpoint.SCAT]:
-            return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to, components)}
+        try:
+            # TODO: Temporary fudge
+            if endpoint in [Endpoint.HIST, Endpoint.BOX, Endpoint.HEAT_NA, Endpoint.SCAT]:
+                return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to, components)}
 
-        return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to)}
+            return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to)}
+        except TypeError as ex:
+
+            return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': f'{ex}'}

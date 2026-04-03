@@ -31,16 +31,17 @@ def dataset_filter():
 
     return regions, date_from, date_to
 
-def component_filter(multivariate=False):
+def component_filter(
+    multivariate=False,
+    name='Component Filter',
+    key=None):
 
-    #data = request_data(ep.COLUMNS, regions, date_from, date_to)
     components = bs.get_component_names()
-    #components = components.drop(['datetime', 'No', 'station'])
     components = components.drop(['No', 'station'])
 
-    with st.expander('Component Filter'):
+    with st.expander(name):
 
         if multivariate:
             return st.multiselect('Components', components)
 
-        return st.selectbox('Component', components)
+        return st.selectbox('Component', components, key=key)

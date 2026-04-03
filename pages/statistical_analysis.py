@@ -25,7 +25,9 @@ with col1:
     regions, date_from, date_to = fc.dataset_filter()
 
 with col2:
-    pollution_component = fc.component_filter(False)
+    pollution_component_x = fc.component_filter(False, 'X-Axis Filter', 'x-axis-filter')
+    pollution_component_y = fc.component_filter(False, 'Y-Axis Filter', 'y-axis-filter')
+    pollution_component = [pollution_component_x, pollution_component_y]
 
 data = request_data(ep.SCAT, regions, date_from, date_to, pollution_component)
 st.pyplot(data)
