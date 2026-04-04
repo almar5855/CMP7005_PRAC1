@@ -124,6 +124,15 @@ def get_scatterplot(regions=None, date_from=None, date_to=None, components=['PM2
 
     return fig
 
+def get_correlation_matrix(regions=None, date_from=None, date_to=None):
+
+    corr = get_data(regions, date_from, date_to, None).corr(numeric_only=True)
+
+    fig = plt.figure()
+    sns.heatmap(corr, cmap='coolwarm', annot=True, annot_kws={'fontsize': 'x-small'}, fmt='.2f',)
+    return fig
+
+
 
 class Endpoint(Enum):
     DATA = auto()
@@ -137,6 +146,7 @@ class Endpoint(Enum):
     BOX = auto()
     HEAT_NA = auto()
     SCAT = auto()
+    CORR = auto()
 
 ENDPOINTS = {
     Endpoint.DATA : get_data,
@@ -150,6 +160,7 @@ ENDPOINTS = {
     Endpoint.BOX : get_boxplot,
     Endpoint.HEAT_NA : get_na_heatmap,
     Endpoint.SCAT : get_scatterplot,
+    Endpoint.CORR : get_correlation_matrix,
 }
 
 class DatasetAPI:

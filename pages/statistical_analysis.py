@@ -5,7 +5,7 @@ from backend_stub import DatasetAPI as api, Endpoint as ep
 from components import nav
 from components import filter as fc
 
-def request_data(endpoint, regions, date_from, date_to, component):
+def request_data(endpoint, regions, date_from, date_to, component=None):
 
     response = api.request(endpoint, regions, date_from, date_to, component)
 
@@ -32,21 +32,27 @@ with col2:
     pollution_component_y = fc.component_filter(False, 'Y-Axis Filter', 'y-axis-filter')
     pollution_component = [pollution_component_x, pollution_component_y]
 
-#ROUTES = {
-#    'Univariate' : ''
-#}
+active_filter = f'##### Data for  {', '.join(regions)} between {date_from} to {date_to}'
 
 if analysis == 'Bivariate':
     st.subheader('Bivariate Statistical Analysis')
+    st.markdown(f'{active_filter}')
 
     data = request_data(ep.SCAT, regions, date_from, date_to, pollution_component)
     if data is not None:
         st.pyplot(data)
 
 elif analysis == 'Multivariate':
-    st.subheader('Multivariate Statistical Analysis')
+    st.subheader(f'Multivariate Statistical Analysis')
+    st.markdown(f'{active_filter}')
+
+    data = request_data(ep.CORR, regions, date_from, date_to)#, pollution_component)
+    if data is not None:
+        st.pyplot(data)
+
 else:
     st.subheader('Univariate Statistical Analysis')
+    st.markdown(f'{active_filter}')
 
 
 
