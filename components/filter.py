@@ -3,6 +3,11 @@ import datetime
 import streamlit as st
 import backend_stub as bs
 
+ANALYSIS_OPTIONS = {
+    'Univariate',
+    'Bivariate',
+    'Multivariate',
+}
 # TODO: This file needs to use the Faux-RESTful API before submission
 
 def dataset_filter():
@@ -45,3 +50,9 @@ def component_filter(
             return st.multiselect('Components', components)
 
         return st.selectbox('Component', components, key=key)
+
+def analysis_filter(): 
+
+    with st.expander('Analysis Filter'):
+
+        return st.selectbox('Analysis', ANALYSIS_OPTIONS)

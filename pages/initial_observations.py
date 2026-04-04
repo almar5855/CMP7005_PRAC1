@@ -22,7 +22,7 @@ def request_data(endpoint, regions, date_from, date_to, component):
 st.set_page_config(layout='wide')
 
 selected = nav.render_navbar()
-st.title(selected)
+st.title('Initial Observations')
 
 col1, col2 = st.columns(2)
 with col1:

@@ -5,6 +5,6 @@ from components import nav
 from components import filter as fc
 
 selected = nav.render_navbar()
-st.title(selected)
+st.title('Modeling')
 
 regions, date_from, date_to = fc.dataset_filter()

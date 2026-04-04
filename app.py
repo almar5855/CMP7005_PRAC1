@@ -20,7 +20,7 @@ def request_data(endpoint, regions, date_from, date_to, component):
 st.set_page_config(layout='wide')
 
 selected = nav.render_navbar()
-st.title(selected)
+st.title('Home')
 
 regions, date_from, date_to = fc.dataset_filter()
 data = request_data(ep.DATA, regions, date_from, date_to, None)

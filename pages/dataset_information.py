@@ -20,7 +20,7 @@ def request_data(endpoint, regions, date_from, date_to):
 st.set_page_config(layout='wide')
 
 selected = nav.render_navbar()
-st.title(selected)
+st.title('Dataset Information')
 
 regions, date_from, date_to = fc.dataset_filter()
 

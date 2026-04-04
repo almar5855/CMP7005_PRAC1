@@ -19,7 +19,7 @@ def request_data(endpoint, regions, date_from, date_to, component):
     return None
 
 selected = nav.render_navbar()
-st.title(selected)
+st.title('Data Preprocessing')
 
 col1, col2 = st.columns(2)
 with col1:
