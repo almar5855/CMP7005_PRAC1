@@ -8,6 +8,7 @@ ANALYSIS_OPTIONS = {
     'Bivariate',
     'Multivariate',
 }
+
 # TODO: This file needs to use the Faux-RESTful API before submission
 
 def dataset_filter():
