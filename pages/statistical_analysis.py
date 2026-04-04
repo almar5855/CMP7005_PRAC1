@@ -1,7 +1,6 @@
 
 import streamlit as st
 from http import HTTPStatus
-#from backend_stub import DatasetAPI as api, Endpoint as ep
 from plotting_backend_stub import PlottingAPI as api, Endpoint as ep
 from components import nav
 from components import filter as fc
@@ -47,13 +46,17 @@ elif analysis == 'Multivariate':
     st.subheader(f'Multivariate Statistical Analysis')
     st.markdown(f'{active_filter}')
 
-    data = request_data(ep.CORR, regions, date_from, date_to)#, pollution_component)
+    data = request_data(ep.CORR, regions, date_from, date_to)
     if data is not None:
         st.pyplot(data)
 
 else:
     st.subheader('Univariate Statistical Analysis')
     st.markdown(f'{active_filter}')
+
+    data = request_data(ep.AUTO, regions, date_from, date_to, pollution_component[0])
+    if data is not None:
+        st.pyplot(data)
 
 
 

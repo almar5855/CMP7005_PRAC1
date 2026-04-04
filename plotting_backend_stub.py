@@ -6,6 +6,7 @@ import seaborn as sns
 import io
 from enum import Enum, auto
 from http import HTTPStatus
+from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 import backend_stub as bs
 
 def get_histogram(regions=None, date_from=None, date_to=None, components='PM2.5'):
@@ -72,12 +73,25 @@ def get_correlation_matrix(regions=None, date_from=None, date_to=None, component
     sns.heatmap(corr, cmap='coolwarm', annot=True, annot_kws={'fontsize': 'x-small'}, fmt='.2f',)
     return fig
 
+def get_autocorrelation(regions=None, date_from=None, date_to=None, component=None):
+
+    df = bs.get_data(regions, date_from, date_to, component)
+
+    fig, ax = plt.subplots(2, 1)
+    fig.tight_layout()
+
+    plot_acf(df[component].dropna(), lags=75, ax=ax[0])
+    plot_pacf(df[component].dropna(), lags=75, ax=ax[1])
+
+    return fig
+
 class Endpoint(Enum):
     HIST = auto()
     BOX = auto()
     HEAT_NA = auto()
     SCAT = auto()
     CORR = auto()
+    AUTO = auto()
 
 ENDPOINTS = {
     Endpoint.HIST : get_histogram,
@@ -85,6 +99,7 @@ ENDPOINTS = {
     Endpoint.HEAT_NA : get_na_heatmap,
     Endpoint.SCAT : get_scatterplot,
     Endpoint.CORR : get_correlation_matrix,
+    Endpoint.AUTO : get_autocorrelation
 }
 
 class PlottingAPI:
