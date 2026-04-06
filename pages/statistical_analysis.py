@@ -54,6 +54,10 @@ else:
     st.subheader('Univariate Statistical Analysis')
     st.markdown(f'{active_filter}')
 
+    data = request_data(ep.OVERVIEW, regions, date_from, date_to, pollution_component[0])
+    if data is not None:
+        st.pyplot(data)
+
     data = request_data(ep.AUTO, regions, date_from, date_to, pollution_component[0])
     if data is not None:
         st.pyplot(data)

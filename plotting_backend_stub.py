@@ -52,6 +52,7 @@ def get_valid_data(regions=None, date_from=None, date_to=None, components=['PM2.
 
     return x, y, interval 
 
+# Bivariate
 def get_scatterplot(regions=None, date_from=None, date_to=None, components=['PM2.5', 'PM10']):
 
     x, y, interval = get_valid_data(regions, date_from, date_to, components)
@@ -65,6 +66,7 @@ def get_scatterplot(regions=None, date_from=None, date_to=None, components=['PM2
 
     return fig
 
+# Multivariate
 def get_correlation_matrix(regions=None, date_from=None, date_to=None, components=None):
 
     corr = bs.get_data(regions, date_from, date_to, None).corr(numeric_only=True)
@@ -85,6 +87,39 @@ def get_autocorrelation(regions=None, date_from=None, date_to=None, component=No
 
     return fig
 
+def get_resampled_data(regions=None, date_from=None, date_to=None, component=None):
+
+    df = bs.get_data(regions, date_from, date_to, component)
+    if date_from==None or date_to==None:
+        return df
+
+    timeframe = pd.to_datetime(date_to) - pd.to_datetime(date_from)
+    if timeframe.days > 365:
+        return df.resample('ME').mean(numeric_only=True)
+    if timeframe.days > 28:
+        return df.resample('W').mean(numeric_only=True)
+    if timeframe.days > 7:
+        return df.resample('D').mean(numeric_only=True)
+
+
+    return df
+
+
+def get_overview(regions=None, date_from=None, date_to=None, component='PM2.5'):
+
+    fig = plt.figure()
+    fig.tight_layout()
+
+    for region in regions:
+        df = get_resampled_data([region], date_from, date_to, component)
+
+        plt.plot(df.index, df[component])
+
+    plt.xticks(rotation=90)
+    plt.legend(regions)
+    return fig
+
+
 class Endpoint(Enum):
     HIST = auto()
     BOX = auto()
@@ -92,6 +127,8 @@ class Endpoint(Enum):
     SCAT = auto()
     CORR = auto()
     AUTO = auto()
+    OVERVIEW = auto()
+
 
 ENDPOINTS = {
     Endpoint.HIST : get_histogram,
@@ -99,7 +136,8 @@ ENDPOINTS = {
     Endpoint.HEAT_NA : get_na_heatmap,
     Endpoint.SCAT : get_scatterplot,
     Endpoint.CORR : get_correlation_matrix,
-    Endpoint.AUTO : get_autocorrelation
+    Endpoint.AUTO : get_autocorrelation,
+    Endpoint.OVERVIEW : get_overview,
 }
 
 class PlottingAPI:
@@ -114,11 +152,8 @@ class PlottingAPI:
             return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': 'Route does not exist'}
 
         try:
-            # TODO: Temporary fudge
-#            if endpoint in [Endpoint.HIST, Endpoint.BOX, Endpoint.HEAT_NA, Endpoint.SCAT]:
             return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to, components)}
 
-#            return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to)}
         except TypeError as ex:
 
             return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': {ex}}
