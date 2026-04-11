@@ -87,31 +87,38 @@ def get_autocorrelation(regions=None, date_from=None, date_to=None, component=No
 
     return fig
 
-def get_resampled_data(regions=None, date_from=None, date_to=None, component=None):
+def get_resampled_data(regions=None, date_from=None, date_to=None, component=None, period=None):
 
     df = bs.get_data(regions, date_from, date_to, component)
-    if date_from==None or date_to==None:
-        return df
 
-    timeframe = pd.to_datetime(date_to) - pd.to_datetime(date_from)
-    if timeframe.days > 365:
-        return df.resample('ME').mean(numeric_only=True)
-    if timeframe.days > 28:
-        return df.resample('W').mean(numeric_only=True)
-    if timeframe.days > 7:
-        return df.resample('D').mean(numeric_only=True)
+    # TODO: Currently you can pick date and period combinations that
+    # just don't make sense, requires some thought and guard code
+
+    #if date_from==None or date_to==None or period==None:
+    #    return df, 'Hourly'
+
+    # TODO: This needs to use the enumeration
+    if period=='Yearly':
+        return df.resample('YE').mean(numeric_only=True), 'Yearly'
+    if period=='Quarterly':
+        return df.resample('QE').mean(numeric_only=True), 'Quarterly'
+    if period=='Monthly':
+        return df.resample('ME').mean(numeric_only=True), 'Monthly'
+    if period=='Weekly':
+        return df.resample('W').mean(numeric_only=True), 'Weekly'
+    if period=='Daily':
+        return df.resample('D').mean(numeric_only=True), 'Daily'
+
+    return df, 'Hourly'
 
 
-    return df
-
-
-def get_overview(regions=None, date_from=None, date_to=None, component='PM2.5'):
+def get_overview(regions=None, date_from=None, date_to=None, component='PM2.5', period=None):
 
     fig = plt.figure()
     fig.tight_layout()
 
     for region in regions:
-        df = get_resampled_data([region], date_from, date_to, component)
+        df, _ = get_resampled_data([region], date_from, date_to, component, period)
 
         plt.plot(df.index, df[component])
 
@@ -119,6 +126,19 @@ def get_overview(regions=None, date_from=None, date_to=None, component='PM2.5'):
     plt.legend(regions)
     return fig
 
+def get_seasonal(regions=None, date_from=None, date_to=None, component='PM2.5', period=None):
+
+    df, sample_period = get_resampled_data(regions, date_from, date_to, component, period) 
+
+    fig = plt.figure()
+    fig.tight_layout()
+
+    plt.plot(df.index, df[component])
+    plt.title(f'{sample_period} average plot for {component}')
+    plt.minorticks_on()
+    plt.tick_params(axis='x', rotation=90)
+
+    return fig
 
 class Endpoint(Enum):
     HIST = auto()
@@ -128,6 +148,7 @@ class Endpoint(Enum):
     CORR = auto()
     AUTO = auto()
     OVERVIEW = auto()
+    SEASONAL = auto()
 
 
 ENDPOINTS = {
@@ -138,12 +159,13 @@ ENDPOINTS = {
     Endpoint.CORR : get_correlation_matrix,
     Endpoint.AUTO : get_autocorrelation,
     Endpoint.OVERVIEW : get_overview,
+    Endpoint.SEASONAL : get_seasonal,
 }
 
 class PlottingAPI:
 
     @staticmethod
-    def request(endpoint, regions=None, date_from=None, date_to=None, components=None):
+    def request(endpoint, regions=None, date_from=None, date_to=None, components=None, period=None):
 
         if not isinstance(endpoint, Endpoint):
             return {'status': HTTPStatus.BAD_REQUEST, 'data': 'Endpoint does not exist'}
@@ -152,6 +174,9 @@ class PlottingAPI:
             return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': 'Route does not exist'}
 
         try:
+            if endpoint in [Endpoint.OVERVIEW, Endpoint.SEASONAL]:
+                return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to, components, period)}
+
             return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to, components)}
 
         except TypeError as ex:

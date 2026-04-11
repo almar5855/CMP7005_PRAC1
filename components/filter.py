@@ -3,11 +3,20 @@ import datetime
 import streamlit as st
 import backend_stub as bs
 
-ANALYSIS_OPTIONS = {
+ANALYSIS_OPTIONS = [
     'Univariate',
     'Bivariate',
     'Multivariate',
-}
+]
+
+ANALYSIS_PERIODS = [
+    'Hourly',
+    'Daily',
+    'Weekly',
+    'Monthly',
+    'Quarterly',
+    'Yearly',
+]
 
 # TODO: This file needs to use the Faux-RESTful API before submission
 
@@ -56,4 +65,16 @@ def analysis_filter():
 
     with st.expander('Analysis Filter'):
 
-        return st.selectbox('Analysis', ANALYSIS_OPTIONS)
+        return st.selectbox('Analysis',
+                            ANALYSIS_OPTIONS,
+                            index=0,
+                            )
+
+def analysis_period_filter(): 
+
+    with st.expander('Analysis Period'):
+
+        return st.selectbox('Analysis Period',
+                            ANALYSIS_PERIODS,
+                            index=0,
+                            )

@@ -5,9 +5,9 @@ from plotting_backend_stub import PlottingAPI as api, Endpoint as ep
 from components import nav
 from components import filter as fc
 
-def request_data(endpoint, regions, date_from, date_to, component=None):
+def request_data(endpoint, regions, date_from, date_to, component=None, period=None):
 
-    response = api.request(endpoint, regions, date_from, date_to, component)
+    response = api.request(endpoint, regions, date_from, date_to, component, period)
 
     if response['status'] == HTTPStatus.OK:
         return response['data']
@@ -26,8 +26,10 @@ col1, col2 = st.columns(2)
 with col1:
     regions, date_from, date_to = fc.dataset_filter()
     analysis = fc.analysis_filter()
+    analysis_period = fc.analysis_period_filter()
 
 with col2:
+    # TODO: Make this switch on analysis type
     pollution_component_x = fc.component_filter(False, 'X-Axis Filter', 'x-axis-filter')
     pollution_component_y = fc.component_filter(False, 'Y-Axis Filter', 'y-axis-filter')
     pollution_component = [pollution_component_x, pollution_component_y]
@@ -54,7 +56,11 @@ else:
     st.subheader('Univariate Statistical Analysis')
     st.markdown(f'{active_filter}')
 
-    data = request_data(ep.OVERVIEW, regions, date_from, date_to, pollution_component[0])
+    data = request_data(ep.SEASONAL, regions, date_from, date_to, pollution_component[0], analysis_period)
+    if data is not None:
+        st.pyplot(data)
+
+    data = request_data(ep.OVERVIEW, regions, date_from, date_to, pollution_component[0], analysis_period)
     if data is not None:
         st.pyplot(data)
 
