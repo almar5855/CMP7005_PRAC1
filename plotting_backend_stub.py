@@ -79,7 +79,7 @@ def get_autocorrelation(regions=None, date_from=None, date_to=None, component=No
 
     df = bs.get_data(regions, date_from, date_to, component)
 
-    fig, ax = plt.subplots(2, 1)
+    fig, ax = plt.subplots(1, 2)
     fig.tight_layout()
 
     plot_acf(df[component].dropna(), lags=75, ax=ax[0])
@@ -122,6 +122,7 @@ def get_overview(regions=None, date_from=None, date_to=None, component='PM2.5', 
 
         plt.plot(df.index, df[component])
 
+    plt.title(f'{period} average plot for {component}')
     plt.xticks(rotation=90)
     plt.legend(regions)
     return fig

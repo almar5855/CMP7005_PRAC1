@@ -76,5 +76,5 @@ def analysis_period_filter():
 
         return st.selectbox('Analysis Period',
                             ANALYSIS_PERIODS,
-                            index=0,
+                            index=4,
                             )

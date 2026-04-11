@@ -56,14 +56,23 @@ else:
     st.subheader('Univariate Statistical Analysis')
     st.markdown(f'{active_filter}')
 
-    data = request_data(ep.SEASONAL, regions, date_from, date_to, pollution_component[0], analysis_period)
-    if data is not None:
-        st.pyplot(data)
+    st.subheader('Overview')
 
-    data = request_data(ep.OVERVIEW, regions, date_from, date_to, pollution_component[0], analysis_period)
-    if data is not None:
-        st.pyplot(data)
+    left, right = st.columns(2)
+    with left:
 
+        data = request_data(ep.OVERVIEW, regions, date_from, date_to, pollution_component[0], analysis_period)
+        if data is not None:
+            st.pyplot(data)
+
+    with right:
+
+        data = request_data(ep.SEASONAL, regions, date_from, date_to, pollution_component[0], analysis_period)
+        if data is not None:
+            st.pyplot(data)
+
+
+    st.subheader('Autocorrelation')
     data = request_data(ep.AUTO, regions, date_from, date_to, pollution_component[0])
     if data is not None:
         st.pyplot(data)
