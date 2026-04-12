@@ -2,7 +2,6 @@
 import streamlit as st
 import backend_stub as bs
 from http import HTTPStatus
-#from backend_stub import DatasetAPI as api, Endpoint as ep
 from plotting_backend_stub import PlottingAPI as api, Endpoint as ep
 from components import nav
 from components import filter as fc

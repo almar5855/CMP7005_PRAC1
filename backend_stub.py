@@ -95,11 +95,7 @@ class DatasetAPI:
         if endpoint not in ENDPOINTS:
             return {'status': HTTPStatus.INTERNAL_SERVER_ERROR, 'data': 'Route does not exist'}
 
-        try:
-            # # TODO: Temporary fudge
-            # if endpoint in [Endpoint.HIST, Endpoint.BOX, Endpoint.HEAT_NA, Endpoint.SCAT]:
-            #     return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to, components)}
-
+        try:         
             return {'status': HTTPStatus.OK, 'data': ENDPOINTS[endpoint](regions, date_from, date_to)}
         except TypeError as ex:
 

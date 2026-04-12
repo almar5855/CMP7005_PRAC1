@@ -1,7 +1,6 @@
 
 import streamlit as st
 from http import HTTPStatus
-#from backend_stub import DatasetAPI as api, Endpoint as ep
 from plotting_backend_stub import PlottingAPI as api, Endpoint as ep
 from components import nav
 from components import filter as fc
@@ -9,7 +8,6 @@ from components import filter as fc
 # TODO: This needs to find one place to live
 def request_data(endpoint, regions, date_from, date_to, component):
 
-    #if isinstance(str, component):
     response = api.request(endpoint, regions, date_from, date_to, component)
 
     if response['status'] == HTTPStatus.OK:
