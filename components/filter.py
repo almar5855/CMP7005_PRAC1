@@ -18,6 +18,10 @@ ANALYSIS_PERIODS = [
     'Yearly',
 ]
 
+MODEL_OPTIONS = [
+    'Linear',
+]
+
 # TODO: This file needs to use the Faux-RESTful API before submission
 
 def dataset_filter():
@@ -77,4 +81,13 @@ def analysis_period_filter():
         return st.selectbox('Analysis Period',
                             ANALYSIS_PERIODS,
                             index=4,
+                            )
+
+def model_filter(): 
+
+    with st.expander('Modeling Approach'):
+
+        return st.selectbox('Analysis Period',
+                            MODEL_OPTIONS,
+                            index=0,
                             )
