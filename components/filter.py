@@ -19,7 +19,10 @@ ANALYSIS_PERIODS = [
 ]
 
 MODEL_OPTIONS = [
-    'Linear',
+    'Linear Regression',
+    'KNN',
+    'Decision Tree',
+#    'XGBoost',
 ]
 
 # TODO: This file needs to use the Faux-RESTful API before submission
@@ -53,7 +56,8 @@ def dataset_filter():
 def component_filter(
     multivariate=False,
     name='Component Filter',
-    key=None):
+    key=None,
+    idx=0):
 
     components = bs.get_component_names()
     components = components.drop(['No', 'station'])
@@ -63,7 +67,7 @@ def component_filter(
         if multivariate:
             return st.multiselect('Components', components)
 
-        return st.selectbox('Component', components, key=key)
+        return st.selectbox('Component', components, key=key, index=idx)
 
 def analysis_filter(): 
 

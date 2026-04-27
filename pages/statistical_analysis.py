@@ -20,37 +20,48 @@ def request_data(endpoint, regions, date_from, date_to, component=None, period=N
 st.set_page_config(layout='wide')
 
 selected = nav.render_navbar()
-st.title('Statistical Analysis')
 
-col1, col2 = st.columns(2)
-with col1:
+with st.sidebar:
+    st.markdown('#### Filters')
+
     regions, date_from, date_to = fc.dataset_filter()
     analysis = fc.analysis_filter()
     analysis_period = fc.analysis_period_filter()
 
-with col2:
-    # TODO: Make this switch on analysis type
-    pollution_component_x = fc.component_filter(False, 'X-Axis Filter', 'x-axis-filter')
-    pollution_component_y = fc.component_filter(False, 'Y-Axis Filter', 'y-axis-filter')
-    pollution_component = [pollution_component_x, pollution_component_y]
+    pollution_component=None
+    if analysis == 'Univariate':
+        pollution_component = fc.component_filter(False, 'X-Axis Filter', 'x-axis-filter')
+    if analysis == 'Bivariate':
+        pollution_component_x = fc.component_filter(False, 'X-Axis Filter', 'x-axis-filter')
+        pollution_component_y = fc.component_filter(False, 'Y-Axis Filter', 'y-axis-filter', 1)
+        pollution_component = [pollution_component_x, pollution_component_y]
 
-active_filter = f'##### Data for  {', '.join(regions)} between {date_from} to {date_to}'
+st.title('Statistical Analysis')
+st.text("Explore the univariate, bivariate, and multivariate relationships in the dataset")
+
+display_components = pollution_component
+if analysis == 'Multivariate':
+    display_components = 'All'
+
+active_filter = f'##### Visualising {display_components} data for  {', '.join(regions)} between {date_from} to {date_to}'
 
 if analysis == 'Bivariate':
     st.subheader('Bivariate Statistical Analysis')
     st.markdown(f'{active_filter}')
 
-    data = request_data(ep.SCAT, regions, date_from, date_to, pollution_component)
-    if data is not None:
-        st.pyplot(data)
+    with st.container(border=True):
+        data = request_data(ep.SCAT, regions, date_from, date_to, pollution_component)
+        if data is not None:
+            st.pyplot(data)
 
 elif analysis == 'Multivariate':
     st.subheader(f'Multivariate Statistical Analysis')
     st.markdown(f'{active_filter}')
 
-    data = request_data(ep.CORR, regions, date_from, date_to)
-    if data is not None:
-        st.pyplot(data)
+    with st.container(border=True):
+        data = request_data(ep.CORR, regions, date_from, date_to)
+        if data is not None:
+            st.pyplot(data)
 
 else:
     st.subheader('Univariate Statistical Analysis')
@@ -58,24 +69,26 @@ else:
 
     st.subheader('Overview')
 
-    left, right = st.columns(2)
+    left, right = st.columns(2, gap ="large")
     with left:
-
-        data = request_data(ep.OVERVIEW, regions, date_from, date_to, pollution_component[0], analysis_period)
-        if data is not None:
-            st.pyplot(data)
+        with st.container(border=True):
+            data = request_data(ep.OVERVIEW, regions, date_from, date_to, pollution_component, analysis_period)
+            if data is not None:
+                st.pyplot(data)
 
     with right:
+        with st.container(border=True):
+            data = request_data(ep.SEASONAL, regions, date_from, date_to, pollution_component, analysis_period)
+            if data is not None:
+                st.pyplot(data)
 
-        data = request_data(ep.SEASONAL, regions, date_from, date_to, pollution_component[0], analysis_period)
+    st.divider()
+
+    with st.container(border=True):
+        st.subheader('Autocorrelation')
+        data = request_data(ep.AUTO, regions, date_from, date_to, pollution_component)
         if data is not None:
             st.pyplot(data)
-
-
-    st.subheader('Autocorrelation')
-    data = request_data(ep.AUTO, regions, date_from, date_to, pollution_component[0])
-    if data is not None:
-        st.pyplot(data)
 
 
 
