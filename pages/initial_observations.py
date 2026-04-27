@@ -21,18 +21,21 @@ def request_data(endpoint, regions, date_from, date_to, component):
 st.set_page_config(layout='wide')
 
 selected = nav.render_navbar()
-st.title('Initial Observations')
 
-col1, col2 = st.columns(2)
-with col1:
+with st.sidebar:
+    st.markdown("#### Filters")
     regions, date_from, date_to = fc.dataset_filter()
-
-with col2:
     pollution_component = fc.component_filter(False)
+
+st.title('Initial Observations')
+#st.subheader('')
+st.subheader('Perform your initial investigation of the dataset')
+st.text('Use the filters in the sidebar to select specific regions, time frames and dataset component.')
+
 
 st.markdown("---")
 
-active_filter = f'##### Data for  {', '.join(regions)} between {date_from} to {date_to}'
+active_filter = f'##### Visualising {pollution_component} data for  {', '.join(regions)} between {date_from} to {date_to}'
 st.markdown(active_filter)
 st.markdown("---")
 
@@ -40,7 +43,7 @@ left, right = st.columns(2, gap="small")
 with left:
     data = request_data(ep.HIST, regions, date_from, date_to, pollution_component)
 
-    with st.container(height=500):
+    with st.container():
 
         st.markdown(f'##### Distribution of {pollution_component} concentrations')
         st.pyplot(data)
@@ -51,7 +54,7 @@ with right:
 
     data = request_data(ep.BOX, regions, date_from, date_to, pollution_component)
 
-    with st.container(height=500):
+    with st.container():
 
         st.markdown(f'##### Boxplot of {pollution_component} concentrations')
         st.pyplot(data)
