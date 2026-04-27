@@ -40,7 +40,7 @@ def get_region_names(regions=None, date_from=None, date_to=None):
     return original['station'].unique()
 
 def get_component_names(regions=None, date_from=None, date_to=None):
-    return original.columns.tolist()
+    return original.columns#.tolist()
 
 def get_dataset_shape(regions=None, date_from=None, date_to=None):
     return get_data(regions, date_from, date_to).shape
