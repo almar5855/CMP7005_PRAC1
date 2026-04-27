@@ -28,7 +28,18 @@ st.title('Modeling')
 with st.sidebar:
     model = fc.model_filter()
 
-data = request_data(ep.LINEAR)
-if data is not None:
-    st.write(data)
-#     st.pyplot(data)
+if model == 'Linear Regression':
+    data = request_data(ep.LINEAR)
+    if data is not None:
+        st.write(data)
+    #     st.pyplot(data)
+elif model == 'KNN':
+    data = request_data(ep.KNN)
+    if data is not None:
+        st.write(data)
+    #     st.pyplot(data)
+else:
+    data = request_data(ep.TREE)
+    if data is not None:
+        st.write(data)
+    #     st.pyplot(data)

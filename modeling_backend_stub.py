@@ -11,6 +11,8 @@ import backend_stub as bs
 import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.preprocessing import RobustScaler
+from sklearn.neighbors import KNeighborsRegressor
 
 aqi_cols = [
     'aqi_Excellent',
@@ -37,12 +39,9 @@ def get_training_test_split():
 
     return train_test_split(ind, dep, test_size=0.3, random_state=37, shuffle=False)
 
-def get_linear_classifier():
+def run_classifier(model, scaler):
 
     _, x_test, _, y_test = get_training_test_split()
-
-    model = joblib.load('linear_model.pkl')
-    scaler = joblib.load('linear_model_scaler.pkl')
 
     scaled = scaler.transform(x_test)
     predictions = model.predict(scaled)
@@ -52,12 +51,19 @@ def get_linear_classifier():
 
     return { 'MAE': mae, 'R^2': r2 }
 
+def get_linear_classifier():
+
+    model = joblib.load('linear_model.pkl')
+    scaler = joblib.load('linear_model_scaler.pkl')
+
+    return run_classifier(model, scaler)
+
 def get_knn_classifier():
 
     model = joblib.load('knn_model.pkl')
     scaler = joblib.load('knn_model_scaler.pkl')
 
-    raise NotImplemented
+    raise run_classifier(model, scaler)
 
 def get_forest_classifier():
 
