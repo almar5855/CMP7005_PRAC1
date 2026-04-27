@@ -63,21 +63,21 @@ def get_knn_classifier():
     model = joblib.load('knn_model.pkl')
     scaler = joblib.load('knn_model_scaler.pkl')
 
-    raise run_classifier(model, scaler)
+    return run_classifier(model, scaler)
 
-def get_forest_classifier():
+def get_tree_classifier():
 
     raise NotImplemented
 
 class Endpoint(Enum):
     LINEAR = auto()
     KNN = auto()
-    FOREST = auto()
+    TREE = auto()
 
 ENDPOINTS = {
     Endpoint.LINEAR : get_linear_classifier,
-    Endpoint.KNN : get_linear_classifier,
-    Endpoint.FOREST : get_forest_classifier,
+    Endpoint.KNN : get_knn_classifier,
+    Endpoint.TREE : get_tree_classifier,
 }
 
 class ModelingAPI:
