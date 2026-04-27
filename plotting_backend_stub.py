@@ -13,7 +13,8 @@ def get_histogram(regions=None, date_from=None, date_to=None, components='PM2.5'
 
     df = bs.get_data(regions, date_from, date_to, components)
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(15,10))
+    fig.tight_layout()
     plt.hist(df[components], bins=50)
     plt.xlabel("")
     plt.xticks([])
@@ -24,7 +25,8 @@ def get_boxplot(regions=None, date_from=None, date_to=None, components='PM2.5'):
 
     df = bs.get_data(regions, date_from, date_to, components)
 
-    fig = plt.figure()
+    fig = plt.figure(figsize=(15,10))
+    fig.tight_layout()
     ax = df[[components]].boxplot()
     ax.set_xlabel("")
     ax.set_xticklabels([])
