@@ -6,7 +6,6 @@ OPTIONS = [
 'Home',
 'Dataset Information',
 'Initial Observations',
-'Data Preprocessing',
 'Statistical Analysis',
 'Modeling',
 ]
@@ -15,7 +14,6 @@ ROUTES = {
 'Home': 'app.py',
 'Dataset Information': 'pages/dataset_information.py',
 'Initial Observations': 'pages/initial_observations.py',
-'Data Preprocessing': 'pages/data_preprocessing.py',
 'Statistical Analysis': 'pages/statistical_analysis.py',
 'Modeling': 'pages/model.py',
 }
@@ -41,12 +39,11 @@ def render_navbar() -> str:
     with st.sidebar:
         selected = option_menu(
             menu_title='Navigation',
-            #options=['Home', 'Dataset Information', 'Initial Observations', 'Data Preprocessing', 'Statistical Analysis', 'Modeling'],
             options=OPTIONS,
-            icons=['house', 'list-task', 'graph-up', 'gear', 'graph-up', 'gear'],
+            icons=['house', 'list-task', 'graph-up', 'graph-up', 'gear'],
             menu_icon="cast",
-            #default_index=0,
-            manual_select=selected
+            default_index=selected,
+            #manual_select=selected
         )
 
     switch_page(selected)
