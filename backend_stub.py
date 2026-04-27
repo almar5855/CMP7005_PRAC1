@@ -6,7 +6,6 @@ from enum import Enum, auto
 from http import HTTPStatus
 
 original = pd.read_csv('original_data.csv', index_col='datetime', parse_dates=['datetime'])
-#processed = pd.read_csv('processed.csv')
 
 def get_data(regions=None, date_from=None, date_to=None, components=None):
 
