@@ -13,7 +13,7 @@ def request_data(endpoint, regions, date_from, date_to):
         return response['data']
 
     with st.expander('Error'):
-        st.write(f'An error was returned from the backend: {response['data']}')  
+        st.write(f"An error was returned from the backend: {response['data']}")
 
     return None
 
