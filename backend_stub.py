@@ -14,7 +14,6 @@ def get_data(regions=None, date_from=None, date_to=None, components=None):
 
     result = []
     tmp = original.groupby('station')
-    #tmp = processed.groupby('station')
 
     for region in regions:
         result.append(tmp.get_group(region))
@@ -39,7 +38,7 @@ def get_region_names(regions=None, date_from=None, date_to=None):
     return original['station'].unique()
 
 def get_component_names(regions=None, date_from=None, date_to=None):
-    return original.columns#.tolist()
+    return original.columns
 
 def get_dataset_shape(regions=None, date_from=None, date_to=None):
     return get_data(regions, date_from, date_to).shape
