@@ -22,7 +22,6 @@ MODEL_OPTIONS = [
     'Linear Regression',
     'KNN',
     'Decision Tree',
-#    'XGBoost',
 ]
 
 # TODO: This file needs to use the Faux-RESTful API before submission
@@ -91,7 +90,7 @@ def model_filter():
 
     with st.expander('Modeling Approach'):
 
-        return st.selectbox('Analysis Period',
+        return st.selectbox('Model',
                             MODEL_OPTIONS,
                             index=0,
                             )

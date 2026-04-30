@@ -143,6 +143,38 @@ def get_seasonal(regions=None, date_from=None, date_to=None, component='PM2.5', 
 
     return fig
 
+def get_aqi(regions=None, date_from=None, date_to=None, component='PM2.5', period=None):
+
+    df = bs.get_processed_data()
+
+    fig, ax = plt.subplots(figsize=(10,5))
+
+    aqi_cols = [
+        'aqi_Excellent',
+        'aqi_Favourable',
+        'aqi_Light pollution',
+        'aqi_Moderate pollution',
+        'aqi_Heavy pollution',
+        'aqi_Ultra serious pollution',
+    ]
+
+    tmp = df.groupby(df.index.year)[aqi_cols].sum()
+
+    tmp_pct = tmp.div(tmp.sum(axis=1), axis=0) * 100
+    tmp_pct.plot.bar(stacked=True, ax=ax)
+    ax.legend(["Excellent", "Favourable", "Light", "Moderate", "Heavy", "Ultra Serious"],
+            title="AQI",
+            loc='upper center',
+            bbox_to_anchor=(0.5, -0.25),
+            ncol=6)
+
+    plt.title("Yearly AQI Percentages")
+    plt.ylabel("Percentage")
+
+    fig.tight_layout()
+
+    return fig
+
 class Endpoint(Enum):
     HIST = auto()
     BOX = auto()
@@ -152,6 +184,7 @@ class Endpoint(Enum):
     AUTO = auto()
     OVERVIEW = auto()
     SEASONAL = auto()
+    AQI = auto()
 
 
 ENDPOINTS = {
@@ -163,6 +196,7 @@ ENDPOINTS = {
     Endpoint.AUTO : get_autocorrelation,
     Endpoint.OVERVIEW : get_overview,
     Endpoint.SEASONAL : get_seasonal,
+    Endpoint.AQI : get_aqi,
 }
 
 class PlottingAPI:

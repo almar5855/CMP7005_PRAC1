@@ -6,6 +6,7 @@ from enum import Enum, auto
 from http import HTTPStatus
 
 original = pd.read_csv('original_data.csv', index_col='datetime', parse_dates=['datetime'])
+processed = pd.read_csv('processed.csv', index_col='datetime', parse_dates=['datetime'])
 
 def get_data(regions=None, date_from=None, date_to=None, components=None):
 
@@ -33,6 +34,10 @@ def get_data(regions=None, date_from=None, date_to=None, components=None):
         result = result[cols]
 
     return result
+
+def get_processed_data():
+
+    return processed
 
 def get_region_names(regions=None, date_from=None, date_to=None):
     return original['station'].unique()

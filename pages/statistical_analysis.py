@@ -37,6 +37,15 @@ with st.sidebar:
         pollution_component = [pollution_component_x, pollution_component_y]
 
 st.title('Statistical Analysis')
+st.text("Overview")
+
+with st.container(border=True):
+    data = request_data(ep.AQI, None, None, None, None)
+    if data is not None:
+        st.pyplot(data)
+
+st.divider()
+
 st.text("Explore the univariate, bivariate, and multivariate relationships in the dataset")
 
 display_components = pollution_component
@@ -84,11 +93,14 @@ else:
 
     st.divider()
 
-    with st.container(border=True):
-        st.subheader('Autocorrelation')
-        data = request_data(ep.AUTO, regions, date_from, date_to, pollution_component)
-        if data is not None:
-            st.pyplot(data)
+
+
+    # TODO: This takes too long to compute so I've excluded it
+    # with st.container(border=True):
+    #     st.subheader('Autocorrelation')
+    #     data = request_data(ep.AUTO, regions, date_from, date_to, pollution_component)
+    #     if data is not None:
+    #         st.pyplot(data)
 
 
 
