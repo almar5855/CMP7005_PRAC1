@@ -1,12 +1,7 @@
 
 import pandas as pd
-#import numpy as np
-#import matplotlib.pylab as plt
-#import seaborn as sns
-#import io
 from enum import Enum, auto
 from http import HTTPStatus
-#from statsmodels.graphics.tsaplots import plot_acf, plot_pacf
 import backend_stub as bs
 import joblib
 from sklearn.model_selection import train_test_split
