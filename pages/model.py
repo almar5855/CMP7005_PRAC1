@@ -23,8 +23,6 @@ st.set_page_config(layout='wide')
 selected = nav.render_navbar()
 st.title('Modeling')
 
-#regions, date_from, date_to = fc.dataset_filter()
-
 with st.sidebar:
     model = fc.model_filter()
 

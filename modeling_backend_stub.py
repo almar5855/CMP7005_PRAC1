@@ -38,7 +38,10 @@ def run_classifier(model, scaler):
 
     _, x_test, _, y_test = get_training_test_split()
 
-    scaled = scaler.transform(x_test)
+    scaled = x_test
+    if scaler is not None:
+        scaled = scaler.transform(x_test)
+
     predictions = model.predict(scaled)
 
     mae = mean_absolute_error(y_test, predictions)
@@ -62,7 +65,8 @@ def get_knn_classifier():
 
 def get_tree_classifier():
 
-    raise NotImplemented
+    model = joblib.load('forest_model.pkl')
+    return run_classifier(model, None)
 
 class Endpoint(Enum):
     LINEAR = auto()

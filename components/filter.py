@@ -24,8 +24,6 @@ MODEL_OPTIONS = [
     'Decision Tree',
 ]
 
-# TODO: This file needs to use the Faux-RESTful API before submission
-
 def dataset_filter():
 
     with st.expander('Dataset Filter'):

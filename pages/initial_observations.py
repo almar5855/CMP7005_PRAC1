@@ -5,7 +5,6 @@ from plotting_backend_stub import PlottingAPI as api, Endpoint as ep
 from components import nav
 from components import filter as fc
 
-# TODO: This needs to find one place to live
 def request_data(endpoint, regions, date_from, date_to, component):
 
     response = api.request(endpoint, regions, date_from, date_to, component)
@@ -28,7 +27,6 @@ with st.sidebar:
     pollution_component = fc.component_filter(False)
 
 st.title('Initial Observations')
-#st.subheader('')
 st.subheader('Perform your initial investigation of the dataset')
 st.text('Use the filters in the sidebar to select specific regions, time frames and dataset component.')
 
