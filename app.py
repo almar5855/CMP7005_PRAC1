@@ -19,10 +19,21 @@ def request_data(endpoint, regions, date_from, date_to, component):
 
 st.set_page_config(layout='wide')
 
-selected = nav.render_navbar()
 st.title('Home')
+st.text("Welcome to the CMP7005 PRAC1 Assessment: From Data to Application Development. we are going to explore the Beijing pollution dataset over the following pages.")
+st.text("The navigation menu will appear on every page, allowing you to move from page to page.")
+st.text("Filtering menus are context sensitive and change from page to page. The statistical analysis page has the most filter options, allowing you to switch between types of analysis.")
+st.divider()
+st.subheader("Raw Data")
+st.text("Use the Dataset Filter menu to familiarise yourself with the data from individual regions.")
 
-regions, date_from, date_to = fc.dataset_filter()
+selected = nav.render_navbar()
+
+with st.sidebar:
+
+    st.markdown("#### Filters")
+    regions, date_from, date_to = fc.dataset_filter()
+
 data = request_data(ep.DATA, regions, date_from, date_to, None)
 if data is not None:
     st.dataframe(data)

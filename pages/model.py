@@ -26,6 +26,7 @@ st.text("Select your modeling approach and observe the results from the classifi
 st.divider()
 
 with st.sidebar:
+    st.markdown("#### Filters")
     model = fc.model_filter()
 
 st.subheader(f"{model} Model Results")
