@@ -149,16 +149,7 @@ def get_aqi(regions=None, date_from=None, date_to=None, component='PM2.5', perio
 
     fig, ax = plt.subplots(figsize=(10,5))
 
-    aqi_cols = [
-        'aqi_Excellent',
-        'aqi_Favourable',
-        'aqi_Light pollution',
-        'aqi_Moderate pollution',
-        'aqi_Heavy pollution',
-        'aqi_Ultra serious pollution',
-    ]
-
-    tmp = df.groupby(df.index.year)[aqi_cols].sum()
+    tmp = pd.crosstab(df.index.year, df['aqi'])
 
     tmp_pct = tmp.div(tmp.sum(axis=1), axis=0) * 100
     tmp_pct.plot.bar(stacked=True, ax=ax)
@@ -169,6 +160,7 @@ def get_aqi(regions=None, date_from=None, date_to=None, component='PM2.5', perio
             ncol=6)
 
     plt.title("Yearly AQI Percentages")
+    plt.xlabel("Year")
     plt.ylabel("Percentage")
 
     fig.tight_layout()

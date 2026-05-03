@@ -37,7 +37,8 @@ with st.sidebar:
         pollution_component = [pollution_component_x, pollution_component_y]
 
 st.title('Statistical Analysis')
-st.text("Overview")
+st.subheader("AQI Overview")
+st.divider()
 
 with st.container(border=True):
     data = request_data(ep.AQI, None, None, None, None)
@@ -46,13 +47,15 @@ with st.container(border=True):
 
 st.divider()
 
-st.text("Explore the univariate, bivariate, and multivariate relationships in the dataset")
+st.subheader("Indepth Analysis")
+st.text('Use the filters in the sidebar to select specific regions, time frames and dataset component to perform an indepth analysis.')
 
 display_components = pollution_component
 if analysis == 'Multivariate':
     display_components = 'All'
 
 active_filter = f'##### Visualising {display_components} data for  {', '.join(regions)} between {date_from} to {date_to}'
+st.divider()
 
 if analysis == 'Bivariate':
     st.subheader('Bivariate Statistical Analysis')
@@ -76,16 +79,16 @@ else:
     st.subheader('Univariate Statistical Analysis')
     st.markdown(f'{active_filter}')
 
-    st.subheader('Overview')
-
     left, right = st.columns(2, gap ="large")
     with left:
+        st.subheader('Individual Regions')
         with st.container(border=True):
             data = request_data(ep.OVERVIEW, regions, date_from, date_to, pollution_component, analysis_period)
             if data is not None:
                 st.pyplot(data)
 
     with right:
+        st.subheader('Combined Regions')
         with st.container(border=True):
             data = request_data(ep.SEASONAL, regions, date_from, date_to, pollution_component, analysis_period)
             if data is not None:
