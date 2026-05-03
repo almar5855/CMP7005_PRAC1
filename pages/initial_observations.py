@@ -27,15 +27,12 @@ with st.sidebar:
     pollution_component = fc.component_filter(False)
 
 st.title('Initial Observations')
-st.subheader('Perform your initial investigation of the dataset')
-st.text('Use the filters in the sidebar to select specific regions, time frames and dataset component.')
-
-
-st.markdown("---")
+st.text('Use the filters in the sidebar to select specific regions, time frames and dataset component to perform your initial investigation.')
+st.divider()
 
 active_filter = f'##### Visualising {pollution_component} data for  {', '.join(regions)} between {date_from} to {date_to}'
 st.markdown(active_filter)
-st.markdown("---")
+st.divider()
 
 left, right = st.columns(2, gap="small")
 with left:
@@ -46,7 +43,7 @@ with left:
         st.markdown(f'##### Distribution of {pollution_component} concentrations')
         st.pyplot(data)
 
-    st.markdown("---")
+    st.divider()
 
 with right:
 
@@ -57,4 +54,4 @@ with right:
         st.markdown(f'##### Boxplot of {pollution_component} concentrations')
         st.pyplot(data)
 
-    st.markdown("---")
+    st.divider()

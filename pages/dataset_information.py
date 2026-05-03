@@ -26,8 +26,10 @@ with st.sidebar:
     regions, date_from, date_to = fc.dataset_filter()
 
 st.title('Dataset Information')
-st.subheader('An overview of the dataset')
 st.text('Use the filter in the sidebar to select specific region(s) to explore high-level information about the dataset.')
+st.divider()
+st.subheader('Overview')
+st.divider()
 
 with st.container(border=True):
     st.markdown('## Dataset Description')

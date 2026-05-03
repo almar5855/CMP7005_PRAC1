@@ -28,7 +28,7 @@ st.divider()
 with st.sidebar:
     model = fc.model_filter()
 
-st.subheader(f"Viewing results from the {model} classification model")
+st.subheader(f"{model} Model Results")
 st.divider()
 
 data = None
