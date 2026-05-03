@@ -4,3 +4,6 @@ seaborn
 holidays
 statsmodels
 jinja2
+streamlit
+scikit-learn
+joblib
