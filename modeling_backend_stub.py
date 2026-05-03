@@ -6,17 +6,11 @@ import backend_stub as bs
 import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, r2_score
+from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, ConfusionMatrixDisplay
 from sklearn.preprocessing import RobustScaler
 from sklearn.neighbors import KNeighborsRegressor
-
-aqi_cols = [
-    'aqi_Excellent',
-    'aqi_Favourable',
-    'aqi_Heavy pollution',
-    'aqi_Light pollution',
-    'aqi_Moderate pollution',
-    'aqi_Ultra serious pollution',
-]
+import matplotlib.pylab as plt
+import seaborn as sns
 
 processed = pd.read_csv('processed.csv', index_col='datetime', parse_dates=['datetime'])
 
@@ -29,14 +23,28 @@ def get_training_test_split():
     dataset = get_processed_data()
     ind = dataset.copy()
 
-    dep = ind[aqi_cols]
-    ind = ind.drop(aqi_cols, axis=1)
+    dep = ind['aqi']
+    ind = ind.drop('aqi', axis=1)
 
     return train_test_split(ind, dep, test_size=0.3, random_state=37, shuffle=False)
 
+def get_metrics(model, X_train, y_train, y_test, predictions):
+
+    #print(f'Train Accuracy : {model.score(X_train, y_train)*100:.2f}%')
+    #print(f'Test  Accuracy : {accuracy_score(y_test, predictions)*100:.2f}%')
+    cr = classification_report(y_test, predictions)
+    cm = confusion_matrix(y_test, predictions)
+
+    fig, ax = plt.subplots(figsize=(10, 8))
+    disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=model.classes_)
+
+    disp.plot(ax=ax, xticks_rotation='vertical')
+
+    return cr, fig
+
 def run_classifier(model, scaler):
 
-    _, x_test, _, y_test = get_training_test_split()
+    x_train, x_test, y_train, y_test = get_training_test_split()
 
     scaled = x_test
     if scaler is not None:
@@ -44,10 +52,10 @@ def run_classifier(model, scaler):
 
     predictions = model.predict(scaled)
 
-    mae = mean_absolute_error(y_test, predictions)
-    r2  = r2_score(y_test, predictions)
+    # mae = mean_absolute_error(y_test, predictions)
+    # r2  = r2_score(y_test, predictions)
 
-    return { 'MAE': mae, 'R^2': r2 }
+    return get_metrics(model, scaled, y_train, y_test, predictions)
 
 def get_linear_classifier():
 

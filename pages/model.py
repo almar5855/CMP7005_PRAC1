@@ -29,8 +29,8 @@ with st.sidebar:
 if model == 'Linear Regression':
     data = request_data(ep.LINEAR)
     if data is not None:
-        st.write(data)
-    #     st.pyplot(data)
+        st.code(data[0])
+        st.pyplot(data[1])
 elif model == 'KNN':
     data = request_data(ep.KNN)
     if data is not None:
