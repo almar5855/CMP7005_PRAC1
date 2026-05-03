@@ -22,22 +22,30 @@ st.set_page_config(layout='wide')
 
 selected = nav.render_navbar()
 st.title('Modeling')
+st.text("Select your modeling approach and observe the results from the classification task")
+st.divider()
 
 with st.sidebar:
     model = fc.model_filter()
 
-if model == 'Linear Regression':
+st.subheader(f"Viewing results from the {model} classification model")
+st.divider()
+
+data = None
+
+if model == 'Logistic Regression':
     data = request_data(ep.LINEAR)
-    if data is not None:
-        st.code(data[0])
-        st.pyplot(data[1])
 elif model == 'KNN':
     data = request_data(ep.KNN)
-    if data is not None:
-        st.write(data)
-    #     st.pyplot(data)
 else:
     data = request_data(ep.TREE)
-    if data is not None:
-        st.write(data)
-    #     st.pyplot(data)
+
+if data is not None:
+
+    left, right = st.columns(2, gap ="large")
+    with left:
+        st.subheader("Metrics")
+        st.code(data[0])
+    with right:
+        st.subheader("Confusion Matrix")
+        st.pyplot(data[1])
