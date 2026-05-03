@@ -19,7 +19,7 @@ def request_data(endpoint, regions, date_from, date_to, component):
 
 st.set_page_config(layout='wide')
 
-selected = nav.render_navbar()
+selected = nav.render_navbar('Initial Observations')
 
 with st.sidebar:
     st.markdown("#### Filters")

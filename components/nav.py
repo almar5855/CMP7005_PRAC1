@@ -20,21 +20,12 @@ ROUTES = {
 
 def switch_page(selected: str) -> None:
 
-    if 'current_page' not in st.session_state:
-        st.session_state.current_page = selected
-
-    if selected != st.session_state.current_page:
-
-        st.session_state.current_page = selected
-
-        st.switch_page(ROUTES[selected])
+    st.switch_page(ROUTES[selected])
 
 
-def render_navbar() -> str:
+def render_navbar(current_page: str) -> None:
 
-    selected = 0
-    if 'current_page' in st.session_state:
-        selected = OPTIONS.index(st.session_state.current_page)
+    default_selection = OPTIONS.index(current_page)
 
     with st.sidebar:
         selected = option_menu(
@@ -42,10 +33,10 @@ def render_navbar() -> str:
             options=OPTIONS,
             icons=['house', 'list-task', 'graph-up', 'graph-up', 'gear'],
             menu_icon="cast",
-            default_index=selected,
-            #manual_select=selected
+            default_index=default_selection,
         )
 
-    switch_page(selected)
+    if current_page != selected:
+        switch_page(selected)
 
     return selected

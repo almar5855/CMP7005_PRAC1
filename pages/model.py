@@ -20,7 +20,7 @@ def request_data(endpoint):
 
 st.set_page_config(layout='wide')
 
-selected = nav.render_navbar()
+selected = nav.render_navbar('Modeling')
 st.title('Modeling')
 st.text("Select your modeling approach and observe the results from the classification task")
 st.divider()

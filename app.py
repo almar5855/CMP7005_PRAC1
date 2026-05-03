@@ -27,7 +27,7 @@ st.divider()
 st.subheader("Raw Data")
 st.text("Use the Dataset Filter menu to familiarise yourself with the data from individual regions.")
 
-selected = nav.render_navbar()
+selected = nav.render_navbar('Home')
 
 with st.sidebar:
 

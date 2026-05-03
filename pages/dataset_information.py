@@ -19,7 +19,7 @@ def request_data(endpoint, regions, date_from, date_to):
 
 st.set_page_config(layout='wide')
 
-selected = nav.render_navbar()
+selected = nav.render_navbar('Dataset Information')
 
 with st.sidebar:
     st.markdown("#### Filters")
